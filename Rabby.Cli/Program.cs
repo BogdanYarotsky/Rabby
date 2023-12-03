@@ -1,1 +1,1 @@
-﻿Console.WriteLine(string.Join(",", args));
+﻿Console.WriteLine(Rabby.Engine.Execute(args));

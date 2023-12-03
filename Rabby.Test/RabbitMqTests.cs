@@ -1,5 +1,8 @@
 namespace Rabby.Test
 {
+    using System.Net.Http.Headers;
+    using System.Text;
+
     [TestClass]
     public class RabbitMqTests
     {
@@ -46,25 +49,14 @@ namespace Rabby.Test
         }
 
         [TestMethod]
-        public void ExchangeIsCreated()
+        public async Task ExchangeIsDeclared()
         {
-            const string exchangeName = "test_exchange";
-            const string exchangeType = "direct"; // Use appropriate exchange type
-            // Declare the exchange
-            _channel?.ExchangeDeclare(exchange: exchangeName, type: exchangeType);
-            // Assert (This needs to be improved for a real test)
-            Assert.IsTrue(_channel?.IsOpen, "Channel is not open");
-        }
-
-        [TestMethod]
-        public void AnotherIsCreated()
-        {
-            const string exchangeName = "test_exchange";
-            const string exchangeType = "direct"; // Use appropriate exchange type
-            // Declare the exchange
-            _channel?.ExchangeDeclare(exchange: exchangeName, type: exchangeType);
-            // Assert (This needs to be improved for a real test)
-            Assert.IsTrue(_channel?.IsOpen, "Channel is not open");
+            Engine.Execute("declare exchange name=my-new-exchange type=fanout".Split(' '));
+            using var client = new HttpClient();
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Basic", Convert.ToBase64String("guest:guest"u8));
+            var response = await client.GetAsync("http://localhost:15672/api/exchanges/%2F/my-new-exchange");
+            Assert.IsTrue(response.IsSuccessStatusCode);
         }
     }
 }

@@ -2,7 +2,7 @@
   "profiles": {
     "Rabby.Cli": {
       "commandName": "Project",
-      "commandLineArgs": "hello world one 2 three"
+      "commandLineArgs": "version"
     }
   }
 }
