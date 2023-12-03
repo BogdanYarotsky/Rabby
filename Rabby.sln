@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34309.116
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rabby.Cli", "Rabby.Cli\Rabby.Cli.csproj", "{5C619420-323E-4436-888F-4E92C875C166}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rabby", "Rabby\Rabby.csproj", "{21D96D96-455D-4F44-9AA3-D824A9A47A36}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rabby.Test", "Rabby.Test\Rabby.Test.csproj", "{47CC5D70-278A-43DA-89DF-DBC30ED7072F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5C619420-323E-4436-888F-4E92C875C166}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5C619420-323E-4436-888F-4E92C875C166}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5C619420-323E-4436-888F-4E92C875C166}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5C619420-323E-4436-888F-4E92C875C166}.Release|Any CPU.Build.0 = Release|Any CPU
+		{21D96D96-455D-4F44-9AA3-D824A9A47A36}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{21D96D96-455D-4F44-9AA3-D824A9A47A36}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{21D96D96-455D-4F44-9AA3-D824A9A47A36}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{21D96D96-455D-4F44-9AA3-D824A9A47A36}.Release|Any CPU.Build.0 = Release|Any CPU
+		{47CC5D70-278A-43DA-89DF-DBC30ED7072F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{47CC5D70-278A-43DA-89DF-DBC30ED7072F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{47CC5D70-278A-43DA-89DF-DBC30ED7072F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{47CC5D70-278A-43DA-89DF-DBC30ED7072F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {829D4375-D49C-490D-AB53-0156E6EEE8B9}
+	EndGlobalSection
+EndGlobal
