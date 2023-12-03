@@ -3,73 +3,68 @@ namespace Rabby.Test
     [TestClass]
     public class RabbitMqTests
     {
-        private DockerClient client;
-        private string containerId;
-        private IConnection connection;
-        private IModel channel;
+        private IConnection _connection = null!;
+        private IModel _channel = null!;
 
         [TestInitialize]
         public async Task StartRabbitMq()
         {
-            client = new DockerClientConfiguration(new Uri("npipe://./pipe/docker_engine")).CreateClient();
-
-            // Pull the RabbitMQ image
-            await client.Images.CreateImageAsync(new ImagesCreateParameters
+            var factory = new ConnectionFactory { HostName = "localhost" };
+            bool isRabbitMqReady = false;
+            int maxAttempts = 30;
+            int attempt = 0;
+            while (attempt < maxAttempts && !isRabbitMqReady)
             {
-                FromImage = "rabbitmq",
-                Tag = "3.12.10-alpine"
-            }, null, new Progress<JSONMessage>());
-
-            // Start the RabbitMQ container
-            var response = await client.Containers.CreateContainerAsync(new CreateContainerParameters
-            {
-                Image = "rabbitmq:3.12.10-alpine",
-                Name = "rabbitmq-tests-container",
-                ExposedPorts = new Dictionary<string, EmptyStruct>
+                try
                 {
-                    { "5672", new EmptyStruct() }
-                },
-                HostConfig = new HostConfig
+                    attempt++;
+                    _connection = factory.CreateConnection();
+                    _channel = _connection.CreateModel();
+                    isRabbitMqReady = true;
+                }
+                catch (Exception ex)
                 {
-                    PortBindings = new Dictionary<string, IList<PortBinding>>
+                    Console.WriteLine($"Attempt {attempt} failed: {ex.Message}");
+                    if (attempt < maxAttempts)
                     {
-                        ["5672"] = new[] {new PortBinding { HostPort = "5672"}}
+                        await Task.Delay(250);
                     }
                 }
-            });
+            }
 
-            containerId = response.ID;
-
-            await client.Containers.StartContainerAsync(containerId, new ContainerStartParameters());
-
-            var factory = new ConnectionFactory { HostName = "localhost" };
-            connection = factory.CreateConnection();
-            channel = connection.CreateModel();
+            if (!isRabbitMqReady)
+            {
+                throw new Exception("Unable to connect to RabbitMQ after multiple attempts.");
+            }
         }
 
         [TestCleanup]
-        public async Task CleanUpRabbitMq()
+        public void CleanUpRabbitMq()
         {
-            // Cleanup the RabbitMQ connection
-            channel?.Close();
-            connection?.Close();
-
-            // Stop and remove the RabbitMQ container
-            await client.Containers.StopContainerAsync(containerId, new ContainerStopParameters());
-            await client.Containers.RemoveContainerAsync(containerId, new ContainerRemoveParameters());
+            _channel.Close();
+            _connection.Close();
         }
 
         [TestMethod]
         public void ExchangeIsCreated()
         {
-            string exchangeName = "test_exchange";
-            string exchangeType = "direct"; // Use appropriate exchange type
-
+            const string exchangeName = "test_exchange";
+            const string exchangeType = "direct"; // Use appropriate exchange type
             // Declare the exchange
-            channel.ExchangeDeclare(exchange: exchangeName, type: exchangeType);
-
+            _channel?.ExchangeDeclare(exchange: exchangeName, type: exchangeType);
             // Assert (This needs to be improved for a real test)
-            Assert.IsTrue(channel.IsOpen, "Channel is not open");
+            Assert.IsTrue(_channel?.IsOpen, "Channel is not open");
+        }
+
+        [TestMethod]
+        public void AnotherIsCreated()
+        {
+            const string exchangeName = "test_exchange";
+            const string exchangeType = "direct"; // Use appropriate exchange type
+            // Declare the exchange
+            _channel?.ExchangeDeclare(exchange: exchangeName, type: exchangeType);
+            // Assert (This needs to be improved for a real test)
+            Assert.IsTrue(_channel?.IsOpen, "Channel is not open");
         }
     }
 }
